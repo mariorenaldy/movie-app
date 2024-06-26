@@ -1,39 +1,19 @@
-import { useState, useEffect } from "react";
-import tmdbService from "./services/tmdbService";
+import Router from "./config/Router";
+import { BrowserRouter } from "react-router-dom";
+import Header from "./components/header/Header";
+import Footer from "./components/footer/Footer";
+
+import "./App.scss";
+import "./assets/boxicons-2.1.4/css/boxicons.min.css";
+import "swiper/css";
 
 function App() {
-  const [movies, setMovies] = useState([]);
-
-  useEffect(() => {
-    const fetchMovies = async () => {
-      const popularMovies = await tmdbService.getPopularMovies();
-      setMovies(popularMovies);
-    };
-
-    fetchMovies();
-  }, []);
-
-  const handleSaveMovie = async (movie) => {
-    try {
-      const savedMovie = await tmdbService.saveMovie(movie);
-      console.log("Movie saved:", savedMovie);
-    } catch (error) {
-      console.error("Error saving movie:", error);
-    }
-  };
-
   return (
-    <div>
-      <h1>Popular Movies</h1>
-      <ul>
-        {movies.map((movie) => (
-          <li key={movie.id}>
-            {movie.title}
-            <button onClick={() => handleSaveMovie(movie)}>Save</button>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <BrowserRouter>
+      <Header />
+      <Router />
+      <Footer />
+    </BrowserRouter>
   );
 }
 
