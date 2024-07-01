@@ -1,36 +1,27 @@
 package pro.luxen.movieapp.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
-@NoArgsConstructor
 @Entity
 public class Movie {
     @Id
     private Long id;
-
     private String title;
-
-    @JsonProperty("original_title")
-    private String originalTitle;
-
+    private String original_title;
     private String overview;
-
-    @JsonProperty("release_date")
-    private String releaseDate;
-
+    private String release_date;
     private double popularity;
+    private String poster_path;
+    private String backdrop_path;
+    private double vote_average;
+    private int vote_count;
 
-    @JsonProperty("poster_path")
-    private String posterPath;
-
-    @JsonProperty("vote_average")
-    private double voteAverage;
-
-    @JsonProperty("vote_count")
-    private int voteCount;
+    @ElementCollection
+    private List<Genre> genres;
 }

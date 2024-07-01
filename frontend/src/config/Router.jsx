@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 
 import Home from "../pages/Home";
 import List from "../pages/List";
-import Detail from "../pages/Detail";
+import Detail from "../pages/detail/Detail";
 
 const Router = () => {
   return (

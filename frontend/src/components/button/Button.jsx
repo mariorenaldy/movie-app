@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import "./button.scss";
 
-function Button({ className, onClick, children }) {
+function Button({ className = "", onClick = null, children }) {
   return (
     <button className={`btn ${className}`} onClick={onClick ? () => onClick() : null}>
       {children}
@@ -15,12 +15,9 @@ Button.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-Button.defaultProps = {
-  className: "",
-  onClick: null,
-};
+export default Button;
 
-export function OutlineButton({ className, onClick, children }) {
+export function OutlineButton({ className = "", onClick = null, children }) {
   return (
     <Button className={`btn-outline ${className}`} onClick={onClick ? () => onClick() : null}>
       {children}
@@ -33,10 +30,3 @@ OutlineButton.propTypes = {
   onClick: PropTypes.func,
   children: PropTypes.node.isRequired,
 };
-
-OutlineButton.defaultProps = {
-  className: "",
-  onClick: null,
-};
-
-export default Button;

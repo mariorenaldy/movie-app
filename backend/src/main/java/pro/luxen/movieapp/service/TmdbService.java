@@ -3,11 +3,7 @@ package pro.luxen.movieapp.service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import pro.luxen.movieapp.model.Movie;
-import pro.luxen.movieapp.model.TmdbResponse;
-import pro.luxen.movieapp.model.VideoResponse;
-import pro.luxen.movieapp.model.Series;
-import pro.luxen.movieapp.model.SeriesResponse;
+import pro.luxen.movieapp.model.*;
 
 import java.util.List;
 import java.util.Map;
@@ -21,38 +17,107 @@ public class TmdbService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public List<Movie> getPopularMovies(Map<String, String> params) {
+    public TmdbResponse<Movie> getPopularMovies(Map<String, String> params) {
         String url = buildUrlWithParams("https://api.themoviedb.org/3/movie/popular", params);
-        TmdbResponse response = restTemplate.getForObject(url, TmdbResponse.class);
-        return response.getResults();
+        return restTemplate.getForObject(url, TmdbResponse.class);
     }
 
-    public Movie getMovieDetails(Long movieId) {
+    public TmdbResponse<Movie> getTopRatedMovies(Map<String, String> params) {
+        String url = buildUrlWithParams("https://api.themoviedb.org/3/movie/top_rated", params);
+        return restTemplate.getForObject(url, TmdbResponse.class);
+    }
+
+    public TmdbResponse<Movie> getUpcomingMovies(Map<String, String> params) {
+        String url = buildUrlWithParams("https://api.themoviedb.org/3/movie/upcoming", params);
+        return restTemplate.getForObject(url, TmdbResponse.class);
+    }
+
+    public TmdbResponse<Movie> getMovieDetails(Long movieId) {
         String url = String.format("https://api.themoviedb.org/3/movie/%d?api_key=%s", movieId, apiKey);
-        return restTemplate.getForObject(url, Movie.class);
+        Movie movie = restTemplate.getForObject(url, Movie.class);
+
+        TmdbResponse<Movie> response = new TmdbResponse<>();
+        assert movie != null;
+        response.setResults(List.of(movie));
+        return response;
     }
 
-    public List<VideoResponse.Video> getMovieVideos(Long movieId) {
+    public TmdbResponse<VideoResponse.Video> getMovieVideos(Long movieId) {
         String url = String.format("https://api.themoviedb.org/3/movie/%d/videos?api_key=%s", movieId, apiKey);
-        VideoResponse response = restTemplate.getForObject(url, VideoResponse.class);
-        return response.getResults();
+        VideoResponse videoResponse = restTemplate.getForObject(url, VideoResponse.class);
+
+        TmdbResponse<VideoResponse.Video> response = new TmdbResponse<>();
+        assert videoResponse != null;
+        response.setResults(videoResponse.getResults());
+        return response;
     }
 
-    public List<Series> getPopularSeries(Map<String, String> params) {
+    public TmdbResponse<Movie> getSimilarMovies(Long movieId) {
+        String url = String.format("https://api.themoviedb.org/3/movie/%d/similar?api_key=%s", movieId, apiKey);
+        return restTemplate.getForObject(url, TmdbResponse.class);
+    }
+
+    public TmdbResponse<CreditResponse.Cast> getMovieCasts(Long movieId) {
+        String url = String.format("https://api.themoviedb.org/3/movie/%d/credits?api_key=%s", movieId, apiKey);
+        CreditResponse creditResponse = restTemplate.getForObject(url, CreditResponse.class);
+
+        TmdbResponse<CreditResponse.Cast> response = new TmdbResponse<>();
+        assert creditResponse != null;
+        response.setResults(creditResponse.getCast());
+        return response;
+    }
+
+    public TmdbResponse<Series> getPopularSeries(Map<String, String> params) {
         String url = buildUrlWithParams("https://api.themoviedb.org/3/tv/popular", params);
-        SeriesResponse response = restTemplate.getForObject(url, SeriesResponse.class);
-        return response.getResults();
+        return restTemplate.getForObject(url, TmdbResponse.class);
     }
 
-    public Series getSeriesDetails(Long seriesId) {
+    public TmdbResponse<Series> getTopRatedSeries(Map<String, String> params) {
+        String url = buildUrlWithParams("https://api.themoviedb.org/3/tv/top_rated", params);
+        return restTemplate.getForObject(url, TmdbResponse.class);
+    }
+
+    public TmdbResponse<Series> getSeriesDetails(Long seriesId) {
         String url = String.format("https://api.themoviedb.org/3/tv/%d?api_key=%s", seriesId, apiKey);
-        return restTemplate.getForObject(url, Series.class);
+        Series series = restTemplate.getForObject(url, Series.class);
+
+        TmdbResponse<Series> response = new TmdbResponse<>();
+        response.setResults(List.of(series));
+        return response;
     }
 
-    public List<VideoResponse.Video> getSeriesVideos(Long seriesId) {
+    public TmdbResponse<Series> getSimilarSeries(Long seriesId) {
+        String url = String.format("https://api.themoviedb.org/3/tv/%d/similar?api_key=%s", seriesId, apiKey);
+        return restTemplate.getForObject(url, TmdbResponse.class);
+    }
+
+    public TmdbResponse<CreditResponse.Cast> getSeriesCasts(Long seriesId) {
+        String url = String.format("https://api.themoviedb.org/3/tv/%d/credits?api_key=%s", seriesId, apiKey);
+        CreditResponse creditResponse = restTemplate.getForObject(url, CreditResponse.class);
+
+        TmdbResponse<CreditResponse.Cast> response = new TmdbResponse<>();
+        assert creditResponse != null;
+        response.setResults(creditResponse.getCast());
+        return response;
+    }
+
+    public TmdbResponse<VideoResponse.Video> getSeriesVideos(Long seriesId) {
         String url = String.format("https://api.themoviedb.org/3/tv/%d/videos?api_key=%s", seriesId, apiKey);
-        VideoResponse response = restTemplate.getForObject(url, VideoResponse.class);
-        return response.getResults();
+        VideoResponse videoResponse = restTemplate.getForObject(url, VideoResponse.class);
+
+        TmdbResponse<VideoResponse.Video> response = new TmdbResponse<>();
+        response.setResults(videoResponse.getResults());
+        return response;
+    }
+
+    public TmdbResponse<Movie> searchMovies(Map<String, String> params) {
+        String url = buildUrlWithParams("https://api.themoviedb.org/3/search/movie", params);
+        return restTemplate.getForObject(url, TmdbResponse.class);
+    }
+
+    public TmdbResponse<Series> searchSeries(Map<String, String> params) {
+        String url = buildUrlWithParams("https://api.themoviedb.org/3/search/tv", params);
+        return restTemplate.getForObject(url, TmdbResponse.class);
     }
 
     private String buildUrlWithParams(String baseUrl, Map<String, String> params) {

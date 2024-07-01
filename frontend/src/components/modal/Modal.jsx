@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import "./modal.scss";
 
-function Modal({ active, id, children }) {
+function Modal({ active = false, id = "", children }) {
   const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
@@ -22,12 +22,7 @@ Modal.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-Modal.defaultProps = {
-  active: false,
-  id: "",
-};
-
-export function ModalContent({ onClose, children }) {
+export function ModalContent({ onClose = null, children }) {
   const contentRef = useRef(null);
 
   function closeModal() {
@@ -48,10 +43,6 @@ export function ModalContent({ onClose, children }) {
 ModalContent.propTypes = {
   onClose: PropTypes.func,
   children: PropTypes.node.isRequired,
-};
-
-ModalContent.defaultProps = {
-  onClose: null,
 };
 
 export default Modal;

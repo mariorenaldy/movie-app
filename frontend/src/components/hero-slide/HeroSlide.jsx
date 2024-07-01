@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { useState, useEffect, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
@@ -19,8 +18,7 @@ function HeroSlide() {
       const params = { page: 1 };
       try {
         const response = await movieService.getMoviesList(movieType.popular, params);
-        setMovieItems(response.slice(1, 4));
-        console.log(response);
+        setMovieItems(response.results.slice(0, 6));
       } catch (error) {
         console.error("Error fetching popular movies:", error);
       }
@@ -30,7 +28,7 @@ function HeroSlide() {
 
   return (
     <div className="hero-slide">
-      <Swiper modules={[Autoplay]} grabCursor={true} spaceBetween={0} slidesPerView={1} autoplay={{ delay: 3000 }}>
+      <Swiper modules={[Autoplay]} grabCursor={true} spaceBetween={0} slidesPerView={1} autoplay={{ delay: 10000 }}>
         {movieItems.map((item, i) => (
           <SwiperSlide key={i}>{({ isActive }) => <HeroSlideItem item={item} className={`${isActive ? "active" : ""}`} />}</SwiperSlide>
         ))}
@@ -53,11 +51,10 @@ function HeroSlideItem(props) {
     const modal = document.querySelector(`#modal_${item.id}`);
 
     try {
-      const response = await movieService.getVideos(category.movies, item.id);
-      const videos = response;
+      const videos = await movieService.getVideos(category.movies, item.id);
 
-      if (videos.length > 0) {
-        const videoSrc = "https://www.youtube.com/embed/" + videos[0].key;
+      if (videos.results.length > 0) {
+        const videoSrc = "https://www.youtube.com/embed/" + videos.results[0].key;
         modal.querySelector(".modal__content > iframe").setAttribute("src", videoSrc);
       } else {
         modal.querySelector(".modal__content").innerHTML = "No trailer";

@@ -1,10 +1,12 @@
 package pro.luxen.movieapp.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -12,22 +14,14 @@ import lombok.NoArgsConstructor;
 public class Series {
     @Id
     private Long id;
-
     private String name;
-
     private String overview;
-
-    @JsonProperty("first_air_date")
-    private String firstAirDate;
-
+    private String first_air_date;
     private double popularity;
+    private String poster_path;
+    private double vote_average;
+    private int vote_count;
 
-    @JsonProperty("poster_path")
-    private String posterPath;
-
-    @JsonProperty("vote_average")
-    private double voteAverage;
-
-    @JsonProperty("vote_count")
-    private int voteCount;
+    @ElementCollection
+    private List<Genre> genres;
 }
